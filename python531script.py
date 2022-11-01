@@ -1,15 +1,26 @@
-import array
-
-
 def roundToPlates(n):
     print("TODO")
     basenmr = n%10
 
 
-def readTMs(valueArray, file):
-    f = open(file, "r")
-    valueArray.append(float(f.read())) 
-    f.close()
+def readTMs(valueArray, fileArray):
+    valueArray.clear()
+    for file in fileArray:
+        f = open(file, "r")
+        valueArray.append(float(f.read())) 
+        f.close()
+
+
+def updateTMs(valueArray, valueToAdd, fileArray):
+    counter = 0
+    for file in fileArray:
+        f = open(file, "w")
+        if (counter == 0 or counter == 1 or counter == 4 or counter == 5): #matches upper body lifts
+            f.write(str(valueArray[counter]+valueToAdd))
+        else:                                                              #matches lower body lifts
+            f.write(str(valueArray[counter]+valueToAdd*2))
+        f.close
+        counter+=1
 
 
 def printSet(multiplierArray, tmValue, repsArray):
@@ -81,10 +92,40 @@ def viewMaxes(arrayValue, arrayName):
         counter+=1
 
 
-def menu():
-    print()
+def changeMaxes(valueArray, nameArray, fileArray):
+    print("\n\tChange TMs")
     print("Choose your option:")
-    option = input("\t1 - Print cycle work\n\t2 - View TM and 1RPMs\n\t3 - Increase TMs(TODO)\n\t0- Exit\nValue(1, 2, 3 or 0): ")
+    option = input("\t1 - Normal TM increse: 2.5kg for upper body lifts and 5kg for lower body (Recomended)\n\t2 - Double TM increse: 5kg for upper body lifts and 10kg for lower body\n\t3 - Reduce TMs: -2.5kg for upper body lifts and -5kg for lower body\n\t0 - Back\nValue(1, 2, 3 or 0): ")
+
+    if (option != "0" and option != "1" and option != "2" and option != "3"):
+        print("You inserted a wrong value, only available options are 1, 2, 3 or 0, try again")
+        return changeMaxes(valueArray, nameArray, fileArray)
+
+    if (option == "0"):
+        return
+
+    print ("\nOld values:")
+    viewMaxes(valueArray, nameArray)
+    
+    if (option == "1"): 
+        updateTMs(valueArray, 2.5, fileArray)
+
+    if (option == "2"):
+        updateTMs(valueArray, 5, fileArray)
+
+    if (option == "3"):
+        updateTMs(valueArray, -2.5, fileArray)
+
+    readTMs(valueArray, fileArray) #after writing to files, we need to read them again
+    print("\nNew values:")
+    viewMaxes(valueArray, nameArray)
+    return changeMaxes(valueArray, nameArray, fileArray)
+
+
+def menu():
+    print("\n\tMain menu")
+    print("Choose your option:")
+    option = input("\t1 - Print cycle work\n\t2 - View TM and 1RPMs\n\t3 - Increase TMs\n\t4 - Write TMs(TODO)\n\t0 - Exit\nValue(1, 2, 3, 4 or 0): ")
     
     if (option == "0"):
         print("Goodbye") 
@@ -99,16 +140,22 @@ def menu():
         return menu()
         
     if (option == "3"):
-        print("todo")
+        changeMaxes(arrayEx, arrayExName, fileArray)
         return menu()
 
+    if (option == "4"):
+        print("TODO")
+        return menu()
 
-    print("You inserted a wrong value, only available options are 1, 2, 3 or 0, try again")
+    print("You inserted a wrong value, only available options are 1, 2, 3, 4 or 0, try again")
     return menu()
 
 
 
-# --------- initialize constant values -------------------------
+
+# --------- initialize constant values --------------------------
+fileArray = ["trainingMaxes/ohpTM.txt", "trainingMaxes/cgbTM.txt", "trainingMaxes/dlTM.txt", "trainingMaxes/fsquatTM.txt", "trainingMaxes/benchTM.txt", "trainingMaxes/ibenchTM.txt", "trainingMaxes/squatTM.txt", "trainingMaxes/rdlTM.txt"]
+
 arrayEx = []
 arrayExName = ["OHP", "CGBench", "Deadlift", "Front Squat", "Bench", "InclineB", "Squat", "RDL"]
 
@@ -119,20 +166,11 @@ setMultML = []
 repsML = []
 setMultAL = []
 repsAL = []
+# ---------------------------------------------------------------
 
-#--------------- grab training maxes from files -----------------------------
-readTMs(arrayEx, "trainingMaxes/ohpTM.txt")
-readTMs(arrayEx, "trainingMaxes/cgbTM.txt")
-readTMs(arrayEx, "trainingMaxes/dlTM.txt")
-readTMs(arrayEx, "trainingMaxes/fsquatTM.txt")
-readTMs(arrayEx, "trainingMaxes/benchTM.txt")
-readTMs(arrayEx, "trainingMaxes/ibenchTM.txt")
-readTMs(arrayEx, "trainingMaxes/squatTM.txt")
-readTMs(arrayEx, "trainingMaxes/rdlTM.txt")
-
-# -----------------------------------------------------------------------
+# --------------- grab training maxes from files ----------------
+readTMs(arrayEx, fileArray)
+# ---------------------------------------------------------------
 
 
 menu()
-
-
