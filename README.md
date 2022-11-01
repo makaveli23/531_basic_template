@@ -1,9 +1,11 @@
 # 531_basic_template
 
 This training program follows "The Simplest Strength Template" as described by Jim in his 531 Second Edition book.
+
 This readme file assumes you know the book/lifting terminology, and you know the meaning and how to calculate your TMs based on your 1RPMs 
 
 Usage:
+
 	-To get the initial setup running you will need to manually insert you TM values for the correct lifts into the correct text files in the trainingMaxes directory
 	 future updates will change this and you will be able to do it in the program itself. (A calculator to calculate your 1RPM and your TM automatically based on your
 	 max effort sets might also come in the future) 
