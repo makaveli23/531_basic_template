@@ -3,11 +3,17 @@ def roundToPlates(n):
     basenmr = n%10
 
 
-def readTMs(valueArray, fileArray):
+def readTMs(valueArray, fileArray, nameArray):
     valueArray.clear()
+    counter = 0
     for file in fileArray:
         f = open(file, "r")
-        valueArray.append(float(f.read())) 
+        try:
+            valueArray.append(float(f.read())) 
+        except ValueError:
+            print("There was an error reading the file, please check if the file is empty or if it contains only numbers")
+            writeOneTM(fileArray, nameArray, counter)
+            break
         f.close()
 
 
@@ -116,16 +122,51 @@ def changeMaxes(valueArray, nameArray, fileArray):
     if (option == "3"):
         updateTMs(valueArray, -2.5, fileArray)
 
-    readTMs(valueArray, fileArray) #after writing to files, we need to read them again
+    readTMs(valueArray, fileArray, nameArray) #after writing to files, we need to read them again
     print("\nNew values:")
     viewMaxes(valueArray, nameArray)
     return changeMaxes(valueArray, nameArray, fileArray)
 
 
+def writeAllTMs(valueArray, fileArray, nameArray):
+    counter = 0
+    for file in fileArray:
+        number = input("Insert your " + nameArray[counter] + " Training Max: ")
+        f = open(file, "w")
+        f.write(number)
+        valueArray[counter] = float(number) 
+        f.close
+        counter+=1
+        
+
+def writeTMs(valueArray, fileArray, nameArray):
+    print("\n\tWrite TM for:")
+    number = -1
+    while (int(number) < 0 or int(number)) > 8: 
+        number = input("1-OHP\n2-CGBench\n3-Deadlift\n4-FrontSquat\n5-Bench\n6-IBench\n7-Squat\n8-RDL\n0-Back\nValue(1, 2, 3, 4, 5, 6, 7, 8 or 0): ")
+    writeOneTM(fileArray, nameArray, int(number)-1)
+    readTMs(valueArray, fileArray, nameArray) #after writing to files, we need to read them again
+
+
+def writeOneTM(fileArray, nameArray, index):
+    TM = -1
+    while (float(TM) < 0):
+        print("o tm que foi passou pelo while foi: " + str(TM))
+        try:
+            TM = float(input("Insert your " + nameArray[index] + " Training Max: "))
+        except ValueError:
+            print("You inserted a wrong value, try again")
+            TM = -1
+
+    f = open(fileArray[index], "w")
+    f.write(str(TM))
+    f.close
+
+
 def menu():
     print("\n\tMain menu")
     print("Choose your option:")
-    option = input("\t1 - Print cycle work\n\t2 - View TM and 1RPMs\n\t3 - Increase TMs\n\t4 - Write TMs(TODO)\n\t0 - Exit\nValue(1, 2, 3, 4 or 0): ")
+    option = input("\t1 - Print cycle work\n\t2 - View TM and 1RPMs\n\t3 - Increase TMs\n\t4 - Write TMs\n\t0 - Exit\nValue(1, 2, 3, 4 or 0): ")
     
     if (option == "0"):
         print("Goodbye") 
@@ -144,7 +185,7 @@ def menu():
         return menu()
 
     if (option == "4"):
-        print("TODO")
+        writeTMs(arrayEx, fileArray, arrayExName)
         return menu()
 
     print("You inserted a wrong value, only available options are 1, 2, 3, 4 or 0, try again")
@@ -169,7 +210,7 @@ repsAL = []
 # ---------------------------------------------------------------
 
 # --------------- grab training maxes from files ----------------
-readTMs(arrayEx, fileArray)
+readTMs(arrayEx, fileArray, arrayExName)
 # ---------------------------------------------------------------
 
 
